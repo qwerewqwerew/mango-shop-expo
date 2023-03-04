@@ -5,6 +5,7 @@ import { API_URL } from "./config/constants";
 import Avatar from "./assets/icons/avatar.png";
 import Carousel from "react-native-anchor-carousel";
 
+
 import axios from "axios";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -15,7 +16,7 @@ console.log(windowWidth);
 dayjs.extend(relativeTime);
 dayjs.locale("ko");
 export default function App() {
-	
+
 	const [products, setProducts] = React.useState([]);
 	const [banners, setBanners] = React.useState([]);
 
@@ -28,6 +29,7 @@ export default function App() {
 					style={styles.item}
 					onPress={() => {
 						carouselRef.current.scrollToIndex(`${index}`);
+			
 					}}
 				>
 					<Image style={styles.bannerImage} source={{ uri: `${API_URL}/${item.imageUrl}` }} />
@@ -59,9 +61,9 @@ export default function App() {
 		<SafeAreaView>
 			<StatusBar style="auto" />
 			<ScrollView>
-			<View style={styles.carousels}>
-				<Carousel data={banners} style={styles.carousel} renderItem={obj} ref={carouselRef} itemWidth={0.9 * windowWidth} inActiveOpacity={0.3} containerWidth={windowWidth} />
-			</View>
+				<View style={styles.carousels}>
+					<Carousel data={banners} style={styles.carousel} renderItem={obj} ref={carouselRef} itemWidth={0.7 * windowWidth} inActiveOpacity={0.3} containerWidth={windowWidth} />
+				</View>
 				<View style={styles.container}>
 					<Text style={styles.headline}>Products</Text>
 					<View style={styles.productList}>
@@ -149,27 +151,23 @@ const styles = StyleSheet.create({
 		bottom: 0,
 		right: 0,
 		left: 0,
-		backgroundColor: "#ffffffaa",
 		zIndex: 999,
 	},
-	carousels:{
+	carousels: {
 		position: "relative",
-		top:"0%"
+		top: -50,
 	},
 	carousel: {
-		top: 0,
-		left: 0,
 		display: "flex",
-		height: 200,
+		height: 340,
+		backgroundColor:'#eee',
 	},
 	bannerImage: {
 		elevation: 3,
 		position: "absolute",
-		width: "20%",
+		width: "80%",
+		top:-30,
 		flex: 1,
-		borderWidth: 5,
-		borderColor: "white",
-		height: 340,
-		top:0,
+		height: 170,
 	},
 });
