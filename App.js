@@ -1,18 +1,40 @@
-import React from "react";
+import React, { useRef } from "react";
 import { StatusBar } from "expo-status-bar";
-import { Text, View, SafeAreaView, ScrollView, Image, StyleSheet } from "react-native";
+import { Text, View, SafeAreaView, ScrollView, Image, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import { API_URL } from "./config/constants";
 import Avatar from "./assets/icons/avatar.png";
+import Carousel from "react-native-anchor-carousel";
 
 import axios from "axios";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ko";
+const { width: windowWidth } = Dimensions.get("window");
+console.log(windowWidth);
 
+dayjs.extend(relativeTime);
+dayjs.locale("ko");
 export default function App() {
+	
 	const [products, setProducts] = React.useState([]);
 	const [banners, setBanners] = React.useState([]);
 
+	const carouselRef = useRef(null);
+
+	function obj({ item, index }) {
+		return (
+			<View>
+				<TouchableOpacity
+					style={styles.item}
+					onPress={() => {
+						carouselRef.current.scrollToIndex(`${index}`);
+					}}
+				>
+					<Image style={styles.bannerImage} source={{ uri: `${API_URL}/${item.imageUrl}` }} />
+				</TouchableOpacity>
+			</View>
+		);
+	}
 	React.useEffect(() => {
 		axios
 			.get(`${API_URL}/banners`)
@@ -31,25 +53,22 @@ export default function App() {
 			.catch((error) => {
 				console.error(error);
 			});
-			console.log(products)
 	}, []);
 
 	return (
 		<SafeAreaView>
 			<StatusBar style="auto" />
 			<ScrollView>
+			<View style={styles.carousels}>
+				<Carousel data={banners} style={styles.carousel} renderItem={obj} ref={carouselRef} itemWidth={0.9 * windowWidth} inActiveOpacity={0.3} containerWidth={windowWidth} />
+			</View>
 				<View style={styles.container}>
-					<View style={styles.banners}>
-						{banners.map((banner, index) => {
-							return <Image source={{ uri: `${API_URL}/${banner.imageUrl}` }} style={styles.bannerImage} key={index} />;
-						})}
-					</View>
 					<Text style={styles.headline}>Products</Text>
 					<View style={styles.productList}>
 						{products.map((product, index) => {
 							return (
-								<View style={styles.productCard} key={index}>
-									{/* {product.soldout === 1 && <View style={styles.productBlur} />} */}
+								<View style={styles.productCard} key={product.id}>
+									{product.soldout === 1 && <View style={styles.productBlur} />}
 									<View>
 										<Image
 											source={{
@@ -60,14 +79,14 @@ export default function App() {
 										/>
 									</View>
 									<View style={styles.productContent}>
-										<Text style={styles.productName}>하네스</Text>
-										<Text style={styles.productPrice}>50000원</Text>
+										<Text style={styles.productName}>{product.name}</Text>
+										<Text style={styles.productPrice}>{product.price}원</Text>
 										<View style={styles.productFooter}>
 											<View style={styles.productSeller}>
 												<Image source={Avatar} style={styles.productAvatar} />
-												<Text style={styles.productSellerName}>도기멍</Text>
+												<Text style={styles.productSellerName}>{product.seller}</Text>
 											</View>
-											<Text style={styles.productDate}>1분전</Text>
+											<Text style={styles.productDate}> {dayjs(product.createdAt).fromNow()}</Text>
 										</View>
 									</View>
 								</View>
@@ -84,6 +103,7 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: "#fff",
+		paddingVertical: 100,
 	},
 	headline: {
 		fontSize: 24,
@@ -97,6 +117,7 @@ const styles = StyleSheet.create({
 		borderRadius: 16,
 		backgroundColor: "#fff",
 		padding: 10,
+		marginBottom: 8,
 	},
 	productImage: {
 		width: "100%",
@@ -131,18 +152,24 @@ const styles = StyleSheet.create({
 		backgroundColor: "#ffffffaa",
 		zIndex: 999,
 	},
-	bannerImage: {
-		width: "100%",
-		height: "100%",
-		position: "absolute",
-		top: 0,
-		left: 0,
-	},
-	banners: {
-		width: "100%",
-		height: 200,
+	carousels:{
 		position: "relative",
+		top:"0%"
+	},
+	carousel: {
 		top: 0,
 		left: 0,
+		display: "flex",
+		height: 200,
+	},
+	bannerImage: {
+		elevation: 3,
+		position: "absolute",
+		width: "20%",
+		flex: 1,
+		borderWidth: 5,
+		borderColor: "white",
+		height: 340,
+		top:0,
 	},
 });
