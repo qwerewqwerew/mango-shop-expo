@@ -1,4 +1,5 @@
 import { StatusBar } from "expo-status-bar";
+import React from "react";
 import { SafeAreaView, Alert, Text, View, ScrollView, Image, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import { API_URL } from "../config/constants";
 import Avatar from "../assets/icons/avatar.png";
@@ -50,7 +51,7 @@ export default function Main(props) {
 						itemHeignt={200}
 						renderItem={(obj) => {
 							return (
-								<TouchableOpacity onPress={() => { Alert.alert("배너클릭") }}>
+								<TouchableOpacity onPress={() => { Alert.alert('click') }}>
 									<Image style={styles.bannerImage} source={{ uri: `${API_URL}/${obj.item.imageUrl}` }} resizeMode="contain" />
 								</TouchableOpacity>
 							)
@@ -60,7 +61,7 @@ export default function Main(props) {
 						{products.map((product, index) => {
 							return (
 								<TouchableOpacity onPress={() => { props.navigation.navigate("Product") }}>
-									<View style={styles.productCard} key={product.id}>
+									<View style={styles.productCard} key={index}>
 										{product.soldout === 1 && <View style={styles.productBlur} />}
 										<View>
 											<Image

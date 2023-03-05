@@ -1,5 +1,5 @@
+import { SafeAreaView, StyleSheet} from "react-native";
 import React from "react";
-import { SafeAreaView, StyleSheet, } from "react-native";
 import  Main  from "./screens/Main";
 import  Product  from "./screens/Product";
 import { NavigationContainer } from '@react-navigation/native';
