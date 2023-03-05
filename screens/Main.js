@@ -1,6 +1,5 @@
-import React, { useRef } from "react";
 import { StatusBar } from "expo-status-bar";
-import { Text, View, ScrollView, Image, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
+import { SafeAreaView, Alert, Text, View, ScrollView, Image, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import { API_URL } from "../config/constants";
 import Avatar from "../assets/icons/avatar.png";
 import Carousel from "react-native-reanimated-carousel";
@@ -37,11 +36,11 @@ export default function Main(props) {
 	}, []);
 
 	return (
-		<View>
+		<SafeAreaView>
 			<StatusBar style="auto" />
 			<ScrollView>
 				<View style={styles.container}>
-					{<Carousel
+					<Carousel
 						data={banners}
 						width={Dimensions.get("window").width}
 						height={200}
@@ -55,7 +54,7 @@ export default function Main(props) {
 									<Image style={styles.bannerImage} source={{ uri: `${API_URL}/${obj.item.imageUrl}` }} resizeMode="contain" />
 								</TouchableOpacity>
 							)
-						}} />}
+						}} />
 					<Text style={styles.headline}>Products</Text>
 					<View style={styles.productList}>
 						{products.map((product, index) => {
@@ -90,7 +89,7 @@ export default function Main(props) {
 					</View>
 				</View>
 			</ScrollView>
-		</View>
+		</SafeAreaView>
 	);
 }
 
