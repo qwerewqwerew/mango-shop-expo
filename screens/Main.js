@@ -2,7 +2,6 @@ import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { SafeAreaView, Alert, Text, View, ScrollView, Image, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import { API_URL } from "../config/constants";
-import Avatar from "../assets/icons/avatar.png";
 import Carousel from "react-native-reanimated-carousel";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -15,12 +14,12 @@ export default function Main(props) {
 
 	const [products, setProducts] = React.useState([]);
 	const [banners, setBanners] = React.useState([]);
+	const [icon, setIcon] = React.useState([]);
 
 	React.useEffect(() => {
 		axios
 			.get(`${API_URL}/banners`)
 			.then((result) => {
-				console.log(result);
 				return setBanners(result.data.banners);
 			})
 			.catch(() => {
@@ -34,8 +33,19 @@ export default function Main(props) {
 			.catch((error) => {
 				console.error(error);
 			});
+		axios
+			.get(`${API_URL}/icons`)
+			.then((result) => {
+				return setIcon(result.data.Icons[0].imageUrl);
+			})
+			.catch(() => {
+				return console.error(error);
+			});
 	}, []);
 
+	if (!products) {
+		return <ActivityIndicator />
+	}
 	return (
 		<SafeAreaView>
 			<StatusBar style="auto" />
@@ -60,7 +70,11 @@ export default function Main(props) {
 					<View style={styles.productList}>
 						{products.map((product, index) => {
 							return (
-								<TouchableOpacity onPress={() => { props.navigation.navigate("Product") }}>
+								<TouchableOpacity key={index} onPress={() => {
+									props.navigation.navigate("Product", {
+										id: product.id,
+									})
+								}}>
 									<View style={styles.productCard} key={index}>
 										{product.soldout === 1 && <View style={styles.productBlur} />}
 										<View>
@@ -77,7 +91,9 @@ export default function Main(props) {
 											<Text style={styles.productPrice}>{product.price}원</Text>
 											<View style={styles.productFooter}>
 												<View style={styles.productSeller}>
-													<Image source={Avatar} style={styles.productAvatar} />
+													<Image source={{
+														uri: `${API_URL}/${icon}`,
+													}} style={styles.productAvatar} />
 													<Text style={styles.productSellerName}>{product.seller}</Text>
 												</View>
 												<Text style={styles.productDate}> {dayjs(product.createdAt).fromNow()}</Text>
@@ -149,4 +165,5 @@ const styles = StyleSheet.create({
 		height: "100%",
 		width: "100%",
 	},
+
 });
