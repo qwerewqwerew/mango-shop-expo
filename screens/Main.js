@@ -54,15 +54,15 @@ export default function Main(props) {
 					<Carousel
 						data={banners}
 						width={Dimensions.get("window").width}
-						height={200}
+						height={300}
 						autoPlay={true}
 						sliderWidth={Dimensions.get("window").width}
 						itemWidth={Dimensions.get("window").width}
-						itemHeignt={200}
+						itemHeignt={300}
 						renderItem={(obj) => {
 							return (
 								<TouchableOpacity onPress={() => { Alert.alert('click') }}>
-									<Image style={styles.bannerImage} source={{ uri: `${API_URL}/${obj.item.imageUrl}` }} resizeMode="contain" />
+									<Image style={styles.bannerImage} source={{ uri: `${API_URL}/${obj.item.imageUrl}` }} />
 								</TouchableOpacity>
 							)
 						}} />
@@ -79,9 +79,7 @@ export default function Main(props) {
 										{product.soldout === 1 && <View style={styles.productBlur} />}
 										<View>
 											<Image
-												source={{
-													uri: `${API_URL}/${product.imageUrl}`,
-												}}
+												source={{ uri: `${API_URL}/${product.imageUrl}` }}
 												style={styles.productImage}
 												resizeMode={"contain"}
 											/>
@@ -91,9 +89,7 @@ export default function Main(props) {
 											<Text style={styles.productPrice}>{product.price}원</Text>
 											<View style={styles.productFooter}>
 												<View style={styles.productSeller}>
-													<Image source={{
-														uri: `${API_URL}/${icon}`,
-													}} style={styles.productAvatar} />
+													<Image source={{ uri: `${API_URL}/${icon}` }} style={styles.productAvatar} />
 													<Text style={styles.productSellerName}>{product.seller}</Text>
 												</View>
 												<Text style={styles.productDate}> {dayjs(product.createdAt).fromNow()}</Text>
